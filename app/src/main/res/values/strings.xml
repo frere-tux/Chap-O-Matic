@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Chap-O-Matic</string>
+    <string name="longitude">Longitude</string>
+    <string name="connect">CONNECT</string>
+    <string name="lookingForDevice">Looking for a Chap-O-Matic nearby</string>
+    <string name="notFound">Chap-O-Matic not found</string>
+    <string name="connecting">Connecting to </string>
+    <string name="connected">Chap-O-Matic connected</string>
+    <string name="found">You are connected to the Chap-O-Matic</string>
+    <string name="disconnect">DISCONNECT</string>
+    <string name="chapServiceNotFound">Chap Service Not Found</string>
+    <string name="send">SEND</string>
+    <string name="latitude">Latitude</string>
+    <string name="turnBLEon">Please, turn the bluetooth on</string>
+    <string name="coordinatesNotFound">Coordinates not found</string>
+    <string name="bluetoothNotSupported">Bluetooth is not supported by your device</string>
+    <string name="bluetoothConnexionError">Bluetooth connexion error</string>
+</resources>
