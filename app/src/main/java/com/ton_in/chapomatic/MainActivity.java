@@ -75,28 +75,28 @@ public class MainActivity extends AppCompatActivity
 
     public void onSendPositionClicked(View view)
     {
+        if (!isConnected)
+        {
+            Toast.makeText(MainActivity.this, "Not send: not connected", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         EditText editTextLatitude = findViewById(R.id.editLatitude);
         EditText editTextLongitude = findViewById(R.id.editLongitude);
 
-        String message;
-
-        if (editTextLatitude.getText().length() == 0 || editTextLongitude.getText().length() == 0)
+        if (editTextLatitude.getText().length() != 0)
         {
-            message = getString(R.string.coordinatesNotFound);
-        }
-        else
-        {
-            message = editTextLatitude.getText().toString() + " ; " + editTextLongitude.getText().toString();
+            bluetoothLeService.write(editTextLatitude.getText().toString().getBytes(), SampleGattAttributes.UART, SampleGattAttributes.UART_TXD);
         }
 
-        Intent intent = new Intent(this, DisplayMessageActivity.class);
-        intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
     }
 
     public void onConnexionClicked(View view)
     {
-        tryToConnect();
+        if (!isConnected)
+        {
+            tryToConnect();
+        }
     }
 
     private void tryToConnect()
@@ -160,6 +160,9 @@ public class MainActivity extends AppCompatActivity
         else
         {
             isScanningForDevice = false;
+
+            handler.removeCallbacksAndMessages(null);
+
             bluetoothLeScanner.stopScan(leScanCallback);
         }
     }
@@ -235,7 +238,10 @@ public class MainActivity extends AppCompatActivity
                 finish();
             }
             // Automatically connects to the device upon successful start-up initialization.
-            tryToConnect();
+            if (!isConnected)
+            {
+                tryToConnect();
+            }
         }
 
         @Override
@@ -266,7 +272,7 @@ public class MainActivity extends AppCompatActivity
             }
             else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action))
             {
-                displayChapService();
+                //displayChapService();
             }
             else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action))
             {
@@ -363,7 +369,8 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private static IntentFilter makeGattUpdateIntentFilter() {
+    private static IntentFilter makeGattUpdateIntentFilter()
+    {
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BluetoothLeService.ACTION_GATT_CONNECTED);
         intentFilter.addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED);

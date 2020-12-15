@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ton_in.chapomatic">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.ton_in.chapomatic">
 
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="true" />
 
@@ -17,10 +16,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".DisplayMessageActivity"
             android:parentActivityName=".MainActivity">
-            <!-- The meta-data tag is required if you support API level 15 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
         </activity>
         <activity android:name=".MainActivity">
             <intent-filter>

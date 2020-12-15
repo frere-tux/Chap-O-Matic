@@ -1,7 +1,9 @@
 package com.ton_in.chapomatic;
 
+import java.util.Arrays;
 import java.util.UUID;
 import java.util.List;
+import java.lang.reflect.Method;
 
 import android.os.IBinder;
 import android.os.Binder;
@@ -17,6 +19,8 @@ import android.bluetooth.BluetoothProfile;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothDevice;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 public class BluetoothLeService extends Service
 {
@@ -232,7 +236,7 @@ public class BluetoothLeService extends Service
         }
         // We want to directly connect to the device, so we are setting the autoConnect
         // parameter to false.
-        bluetoothGatt = device.connectGatt(this, false, gattCallback);
+        bluetoothGatt = device.connectGatt(this, false, gattCallback, BluetoothDevice.TRANSPORT_LE);
         Log.d(TAG, "Trying to create a new connection.");
         bluetoothDeviceAddress = address;
         connectionState = STATE_CONNECTING;
@@ -263,5 +267,59 @@ public class BluetoothLeService extends Service
         
         bluetoothGatt.close();
         bluetoothGatt = null;
+    }
+
+    public void write(@NonNull byte[] data, String serviceName, String characteristicName)
+    {
+        BluetoothGattCharacteristic mUartTxCharacteristic;
+
+        BluetoothGattService service = bluetoothGatt.getService(UUID.fromString(serviceName));
+        if (service == null)
+        {
+            Log.e("Chap", "Could find service");
+            return;
+        }
+
+        BluetoothGattCharacteristic characteristic = service.getCharacteristic(UUID.fromString(characteristicName));
+        if (characteristic == null)
+        {
+            Log.e("Chap", "Could not find characteristic");
+            return;
+        }
+
+        int offset = 0;
+
+        do {
+            final int packetSize = Math.min(data.length - offset, 17);
+            final byte[] packet = Arrays.copyOfRange(data, offset, offset + packetSize);
+            offset += packetSize;
+
+            final int finalOffset = offset;
+
+            characteristic.setValue(packet);
+            if(!bluetoothGatt.writeCharacteristic(characteristic))
+            {
+                Log.e("Chap", "Could not write packet to characteristic");
+            }
+
+        } while (offset < data.length);
+    }
+
+    public void refreshGatt()
+    {
+        try
+        {
+            // BluetoothGatt gatt
+            final Method refresh = bluetoothGatt.getClass().getMethod("refresh");
+            if (refresh != null)
+            {
+                refresh.invoke(bluetoothGatt);
+                Log.d("Chap", "Refreshing Gatt");
+            }
+        }
+        catch (Exception e)
+        {
+            Log.e("Chap", "Could not refresh gatt: " + e.toString());
+        }
     }
 }

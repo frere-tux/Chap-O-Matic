@@ -11,6 +11,9 @@ public class SampleGattAttributes
     public static String CHAP = "9bc63380-0000-1000-8000-00805f9b34fb";
     public static String CHAP_CHAR_1 = "00003381-0000-1000-8000-00805f9b34fb";
     public static String CHAP_CHAR_2 = "00003382-0000-1000-8000-00805f9b34fb";
+    public static String UART = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+    public static String UART_TXD = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
+    public static String UART_RXD = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
 
     static
     {
@@ -18,8 +21,11 @@ public class SampleGattAttributes
         attributes.put(GENERIC_ACCESS, "Generic Access Service");
         attributes.put(GENERIC_ATTRIBUTE, "Generic Attribute Service");
         attributes.put(DEVICE_INFORMATION, "Device Information Service");
+        attributes.put(UART, "UART Service");
         attributes.put(CHAP, "Chap Service");
         // Sample Characteristics.
+        attributes.put(UART_TXD, "TDX Characteristic");
+        attributes.put(UART_RXD, "RDX Characteristic");
         attributes.put(CHAP_CHAR_1, "Characteristic 1");
         attributes.put(CHAP_CHAR_2, "Characteristic 2");
     }
